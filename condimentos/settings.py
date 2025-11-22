@@ -27,6 +27,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-xz7)%@bu9(ez1qs^j^_#&
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
+    'api.casacondimentos.com',  # Subdominio para el backend y admin
     'casacondimentos.com',
     'www.casacondimentos.com',
     '127.0.0.1:8000',
@@ -34,6 +35,7 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://api.casacondimentos.com',  # Subdominio para el backend y admin
     'https://casacondimentos.com',
     'https://www.casacondimentos.com',
 ]
