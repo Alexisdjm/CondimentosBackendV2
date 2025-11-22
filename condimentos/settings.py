@@ -21,10 +21,10 @@ import os
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xz7)%@bu9(ez1qs^j^_#&7yo(1ahg1gkgb4&%#_71$^#-3^p*y'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-xz7)%@bu9(ez1qs^j^_#&7yo(1ahg1gkgb4&%#_71$^#-3^p*y')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'casacondimentos.com',
@@ -34,7 +34,8 @@ ALLOWED_HOSTS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://casacondimentos.com'
+    'https://casacondimentos.com',
+    'https://www.casacondimentos.com',
 ]
 
 # Configuración de CSRF y Sesiones (se sobrescribe abajo según DEBUG)
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Debe ir primero
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise para archivos estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',  # Sesiones antes de CSRF
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -214,14 +216,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-#ssss
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Directorio para archivos estáticos recopilados
+
 MEDIA_URL = '/images/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
 STATICFILES_DIRS = [
     # Configuración para archivos estáticos de DRF
 ]
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+# Configuración de WhiteNoise para servir archivos estáticos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

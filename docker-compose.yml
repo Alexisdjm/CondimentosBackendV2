@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    command: gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 120 condimentos.wsgi:application
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+      - ./static/images:/app/static/images
+      - ./staticfiles:/app/staticfiles
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY:-django-insecure-xz7)%@bu9(ez1qs^j^_#&7yo(1ahg1gkgb4&%#_71$^#-3^p*y}
+    restart: unless-stopped
