@@ -5,12 +5,24 @@ services:
     build: .
     command: gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 120 condimentos.wsgi:application
     volumes:
-      - ./db.sqlite3:/app/db.sqlite3
-      - ./static/images:/app/static/images
-      - ./staticfiles:/app/staticfiles
+      # Volúmenes nombrados para persistencia de datos
+      # Montar a directorio para permitir que SQLite cree el archivo
+      - condimentos_db:/app/data
+      - condimentos_media:/app/static/images
+      - condimentos_static:/app/staticfiles
     ports:
       - "8000:8000"
     environment:
       - DEBUG=False
       - SECRET_KEY=${SECRET_KEY:-django-insecure-xz7)%@bu9(ez1qs^j^_#&7yo(1ahg1gkgb4&%#_71$^#-3^p*y}
     restart: unless-stopped
+
+# Definir los volúmenes nombrados
+# Estos volúmenes persisten independientemente de los contenedores
+volumes:
+  condimentos_db:
+    driver: local
+  condimentos_media:
+    driver: local
+  condimentos_static:
+    driver: local

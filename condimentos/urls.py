@@ -1,10 +1,12 @@
 from django.contrib import admin
-from django.urls import path, include
-from django.http import JsonResponse
+from django.urls import path, include, re_path
+from django.http import JsonResponse, FileResponse, Http404
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 from core.api.router import router
 from core.api.views import CartApiViewSet
+import os
 
 def api_root(request):
     # """Vista raíz que muestra información sobre la API"""
@@ -19,6 +21,27 @@ def api_root(request):
         'frontend': 'Esta API está diseñada para ser consumida por una aplicación React separada'
     })
 
+def serve_media(request, path):
+    """
+    Vista personalizada para servir archivos media en producción.
+    Funciona tanto en desarrollo (DEBUG=True) como en producción (DEBUG=False).
+    """
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    if os.path.exists(file_path) and os.path.isfile(file_path):
+        # Determinar el tipo MIME basado en la extensión del archivo
+        ext = os.path.splitext(file_path)[1].lower()
+        mime_types = {
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.png': 'image/png',
+            '.gif': 'image/gif',
+            '.webp': 'image/webp',
+            '.svg': 'image/svg+xml',
+        }
+        content_type = mime_types.get(ext, 'application/octet-stream')
+        return FileResponse(open(file_path, 'rb'), content_type=content_type)
+    raise Http404("Archivo no encontrado")
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
@@ -32,5 +55,12 @@ urlpatterns = [
     # Endpoint de debugging de sesiones
     path('api/debug-session/', CartApiViewSet.as_view({'get': 'debug_session'}), name='debug-session'),
 
+    # Servir archivos media (imágenes)
+    re_path(r'^images/(?P<path>.*)$', serve_media, name='serve_media'),
+
     path('', api_root, name='home'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# Solo agregar static() en desarrollo (DEBUG=True)
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

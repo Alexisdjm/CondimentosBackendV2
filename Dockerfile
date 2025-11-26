@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copiar el proyecto
 COPY . .
 
-# Crear directorios para archivos estáticos y media
-RUN mkdir -p /app/staticfiles /app/static/images
+# Crear directorios para archivos estáticos, media y base de datos
+RUN mkdir -p /app/staticfiles /app/static/images /app/data
 
 # Recopilar archivos estáticos (se ejecutará en build time, pero también en runtime)
 # Nota: Esto requiere que la base de datos esté disponible o usar --no-input

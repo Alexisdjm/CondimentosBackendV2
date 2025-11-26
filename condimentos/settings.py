@@ -31,13 +31,17 @@ ALLOWED_HOSTS = [
     'casacondimentos.com',
     'www.casacondimentos.com',
     '127.0.0.1:8000',
-    '127.0.0.1'
+    '127.0.0.1',
+    'localhost',  # Para desarrollo local
+    'localhost:8000',  # Para desarrollo local con puerto
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'https://api.casacondimentos.com',  # Subdominio para el backend y admin
     'https://casacondimentos.com',
     'https://www.casacondimentos.com',
+    'http://localhost:8000',  # Para desarrollo local
+    'http://127.0.0.1:8000',  # Para desarrollo local
 ]
 
 # Configuración de CSRF y Sesiones (se sobrescribe abajo según DEBUG)
@@ -175,10 +179,13 @@ WSGI_APPLICATION = 'condimentos.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# Usar directorio de volumen si existe (Docker), sino usar BASE_DIR (local)
+DB_DIR = Path('/app/data') if Path('/app/data').exists() else BASE_DIR
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': DB_DIR / 'db.sqlite3',
     }
 }
 
