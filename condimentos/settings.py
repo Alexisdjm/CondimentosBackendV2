@@ -117,6 +117,8 @@ SESSION_COOKIE_DOMAIN = None  # None para permitir subdominios
 
 # Configurar orígenes permitidos para React
 CORS_ALLOWED_ORIGINS = [
+     "https://casacondimentos.com",
+    "https://www.casacondimentos.com",
     "http://localhost:3000",  # React development server
     "http://127.0.0.1:3000",  # React development server (alternativo)
     "http://localhost:5173",  # Vite development server
