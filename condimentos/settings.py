@@ -104,12 +104,16 @@ else:
     CORS_ALLOW_ALL_ORIGINS = False
     CORS_ALLOW_CREDENTIALS = True
     SESSION_COOKIE_SECURE = True  # True para producción (HTTPS)
-    SESSION_COOKIE_SAMESITE = 'Strict'
+    SESSION_COOKIE_SAMESITE = 'None'  # Cambiar de 'Strict' a 'None' para cross-origin
     CSRF_COOKIE_SECURE = True  # True para producción (HTTPS)
-    CSRF_COOKIE_SAMESITE = 'Strict'
+    CSRF_COOKIE_SAMESITE = 'None'  # Cambiar de 'Strict' a 'None' para cross-origin
     SESSION_COOKIE_HTTPONLY = True
+    # Configurar dominio para compartir cookies entre subdominios
+    SESSION_COOKIE_DOMAIN = '.casacondimentos.com'  # Cambiar de None a '.casacondimentos.com'
+    CSRF_COOKIE_DOMAIN = '.casacondimentos.com'  # Agregar esta línea
 
-SESSION_COOKIE_DOMAIN = None  # None para permitir subdominios
+# Eliminar o comentar esta línea (línea 112) ya que se configura arriba según DEBUG
+# SESSION_COOKIE_DOMAIN = None  # None para permitir subdominios
 
 # Configuración de CORS para React (se sobrescribe arriba según DEBUG)
 # CORS_ALLOW_CREDENTIALS = True  # Comentado porque se maneja arriba
