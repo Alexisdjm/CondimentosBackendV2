@@ -661,10 +661,11 @@ class ProductViewSet(viewsets.ModelViewSet):
         """
         Obtener productos destacados.
         Endpoint: /api/products/featured/
+        Filtra únicamente los productos que tengan featured=True.
         """
         try:
-            # Por ahora retorna todos los productos, puedes agregar lógica para destacados
-            featured_products = Product.objects.all()[:6]  # Primeros 6 productos
+            # Filtrar solo productos con featured=True
+            featured_products = Product.objects.filter(featured=True)
             serializer = self.get_serializer(featured_products, many=True)
             return Response({
                 'featured_products': serializer.data,
